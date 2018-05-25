@@ -15,7 +15,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
-
+  
 
 // when requests come into `/shopping-list` or
 // `/recipes`, we'll route them to the express

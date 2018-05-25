@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+  
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
@@ -75,6 +75,6 @@ router.put('/:id', jsonParser, (req, res) => {
     ingredients: req.body.ingredients
   });
   res.status(204).end();
-})
+});
 
 module.exports = router;

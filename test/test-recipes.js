@@ -37,24 +37,44 @@ describe('Recipes', function() {
   });
 
   it('Should be able to POST new recipes', function() {
-  	const newRecipe = {'name': 'Buttered Toast', 'ingredients': ['butter', 'toast']};
-  	return chai.request(app)
+  	
+    const newRecipe = {'name': 'Buttered Toast', 'ingredients': ['butter', 'toast']};
+  	
+    return chai.request(app)
   		.post('recipes')
   		.send(newRecipe)
   		.then(res => {
   			expect(res).to.have.status(201);
-	        expect(res).to.be.json;
-	        expect(res.body).to.be.a('object');
-	        expect(res.body).to.include.keys('id', 'name', 'ingredients');
-	        expect(res.body.id).to.not.equal(null);
-	        expect(res.body.ingredients).to.be.a('array');
-	        // assign id to the temp object instantiated above and assert that it is deep equal to the created database object
-	        expect(res.body).to.deep.equal(Object.assign(newItem, {id: res.body.id}));
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.include.keys('id', 'name', 'ingredients');
+        expect(res.body.id).to.not.equal(null);
+        expect(res.body.ingredients).to.be.a('array');
+        // assign id to the temp object instantiated above and assert that it is deep equal to the created database object
+        expect(res.body).to.deep.equal(Object.assign(newItem, {id: res.body.id}));
   		});
   });
 
   it('Should be able to modify recipes already entered into the database with PUT', function() {
-  	// TODO: Test PUT
+  	
+    const putRecipe = {'name': 'Green Tea', 'ingredients': ['hot water', 'green teabag']};
+    
+    return chai.request(app)
+      .get('/recipes')
+      .then(res => {
+        expect(res.body.length).to.be.at.least(1);
+        const alteredRecipe = res.body[0];
+        putRecipe.id = alteredRecipe.id;
+        return chai.request(app)
+          .put(`recipes/${putRecipe.id}`)
+          .send(putRecipe);
+      })
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.deep.equal(updateData);
+      });
   });
 
   it('Should be able to delete recipes from the database', function() {
